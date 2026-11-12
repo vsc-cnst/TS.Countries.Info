@@ -31,6 +31,8 @@ jobs:
         with:
           node-version: '24'
           registry-url: https://registry.npmjs.org/
+      - run:  git config --global user.name "GitHub Actions"
+      - run:  git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - run: npm version ${{ github.event.release.tag_name }}
       - run: npm stage publish
       - run: npm stage publish  # Or: npm publish
