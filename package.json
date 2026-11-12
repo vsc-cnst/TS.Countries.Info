@@ -50,7 +50,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepublishOnly": "npm ci & npm run build & npm version patch"
+    "prepublishOnly": "npm ci & npm run build"
   },
   "keywords": [
     "ts",
