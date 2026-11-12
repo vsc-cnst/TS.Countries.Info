@@ -1,6 +1,6 @@
 {
   "name": "@vsc-cnst/countries-info",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A TypeScript library that provides detailed information about countries, including their names, languages, translations, and other metadata.",
   "author": "vsc",
   "repository": {
