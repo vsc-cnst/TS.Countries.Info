@@ -1,8 +1,12 @@
 {
-  "name": "@vsc_cnst/countries-info",
+  "name": "@vsc-cnst/countries-info",
   "version": "1.0.0",
   "description": "A TypeScript library that provides detailed information about countries, including their names, languages, translations, and other metadata.",
   "author": "vsc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vsc-cnst/TS.Countries.Info.git"
+  },
   "license": "MIT",
   "main": "dist/index.ts",
   "module": "dist/index.mjs",
@@ -10,6 +14,20 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        }
+      }
+    }
+  },
   "tsup": {
     "entry": [
       "src/index.ts"
@@ -32,7 +50,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm ci & npm run build & npm version patch"
   },
   "keywords": [
     "ts",
