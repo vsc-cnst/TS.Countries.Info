@@ -1,37 +1,63 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 
 name: Publish to NPM
 
 on:
-  release:
-    types: [created]
-
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version (e.g. 1.2.3)
+        required: true
+        type: string
 
 jobs:
-
   publish-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v6
+
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
           registry-url: https://registry.npmjs.org/
-      
-      # Add a git user for version update
-      - run:  git config --global user.name "GitHub Actions"
-      - run:  git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Install and build
-      - run: npm ci
-      - run: npm run build
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: npm ci
+
       
-      # Set release version
-      - run: npm version ${{ github.event.release.tag_name }}
-      
-      # ublish to NPM
-      - run: npm stage publish  # Or: npm publish
+      - name: Update version, create commit and tag
+        run: npm version "${{ inputs.version }}"
+
+      - name: Build
+        run: npm run build
+
+      - name: Push version commit and tag
+        run: git push origin HEAD --follow-tags
+
+      - name: Publish to NPM
+        run: npm publish --provenance
+
+  release:
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Create GitHub Release using the existing tag
+      - name: Create GitHub Release
+        run: |
+          gh release create "v${{ inputs.version }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
