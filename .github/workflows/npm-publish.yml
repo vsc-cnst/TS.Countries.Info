@@ -12,18 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 'latest'
-      - run: npm ci
-      - run: npm run build
 
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -31,8 +21,17 @@ jobs:
         with:
           node-version: '24'
           registry-url: https://registry.npmjs.org/
+      
+      # Add a git user for version update
       - run:  git config --global user.name "GitHub Actions"
       - run:  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Install and build
+      - run: npm ci
+      - run: npm run build
+      
+      # Set release version
       - run: npm version ${{ github.event.release.tag_name }}
-      - run: npm stage publish
+      
+      # ublish to NPM
       - run: npm stage publish  # Or: npm publish
