@@ -34,7 +34,7 @@ jobs:
 
       
       - name: Update version, create commit and tag
-        run: npm version "${{ inputs.version }}"
+        run: npm version "${{ inputs.version }}" --allow-same-version
 
       - name: Build
         run: npm run build
