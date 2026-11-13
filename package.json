@@ -1,6 +1,6 @@
 {
   "name": "@vsc-cnst/countries-info",
-  "version": "1.0.12",
+  "version": "1.0.11",
   "description": "A TypeScript library that provides detailed information about countries, including their names, languages, translations, and other metadata.",
   "author": "vsc",
   "repository": {
@@ -15,7 +15,16 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js"
+      }
   },
   "tsup": {
     "entry": [
